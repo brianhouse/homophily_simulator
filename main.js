@@ -1,31 +1,27 @@
-var DIMENSIONS = [10, 10];
-var cells = [];
-var cell_width;
-var cell_height;
+const GRID_SIZE = 20;
+const CELL_WIDTH = 20;
+const CELL_HEIGHT = 20;
+let cells = [];
+
+PERCENT = 20;
 
 function setup() { 
 
-    // var canvas = createCanvas(displayWidth, displayHeight);
-    var canvas = createCanvas(300, 300); 
+    let canvas = createCanvas(CELL_WIDTH * GRID_SIZE, CELL_HEIGHT * GRID_SIZE); 
+    console.log(width, height);
     canvas.parent('p5');    
 
-    var c = 0;
-    for (var x=0; x<DIMENSIONS[0]; x++) {
-        for (var y=0; y<DIMENSIONS[1]; y++) {
-            var adjacent = [];
-            if (x > 0) adjacent.push(cells[(y * DIMENSIONS[1]) + x - 1]);
-            if (x < DIMENSIONS[0] - 1) adjacent.push(cells[(y * DIMENSIONS[1]) + x + 1]);
-            if (y > 0) adjacent.push(cells[((y - 1) * DIMENSIONS[1]) + x]);
-            if (y < DIMENSIONS[1] - 1) adjacent.push(cells[((y + 1) * DIMENSIONS[1]) + x]);
-            cells[(y * DIMENSIONS[1]) + x] = new Cell(c++, x, y, adjacent);
+    for (let y=0; y<GRID_SIZE; y++) {    
+        for (let x=0; x<GRID_SIZE; x++) {
+            cells.push(new Cell((y * GRID_SIZE) + x, x, y));
         }
     }
 
-    // make a percentage of agents here, and distribute
+    for (let cell of cells) {
+        cell.neighbors;
+    }
 
-    console.log(cells);
-
-    frameRate(10);
+    frameRate(15);
 
 } 
 
@@ -33,47 +29,89 @@ function draw() {
 
     background(220, 100, 100);
 
-    cell_width = width / DIMENSIONS[0];
-    cell_height = height / DIMENSIONS[1];
-
-    for (var c in cells) {
-        cells[c].draw(0);
+    for (let cell of cells) {
+        cell.draw(0);
     }
 
-    cells[55].color = 256;
-    for (c in cells[55].adjacent) {
-        cells[55][c].color = 0;
+}
+
+function mousePressed() {
+
+    for (let cell of cells) {
+        cell.mousePressed();
     }
 
 }
 
 
-function Agent(color) {
 
-    this.color = color;
-    this.cell = null;
+//////////
 
-    this.move = function(cell) {
+
+class Agent {
+
+    constructor(identity) {
+        this.identity = identity;
+        this.cell = null;
+    }
+
+    move(cell) {
+        this.cell.agent = null;
         this.cell = cell;
-        this.cell.color = this.color;
-    };
+        this.cell.agent = this;
+    }
+
+    get neighbors() {
+        return this.cell.neighbors;
+    }
 
 }
 
 
-function Cell(id, x, y, adjacent) {
+class Cell {
 
-    this.id = id;
-    this.x = x;
-    this.y = y;
-    this.color = 128;
-    this.adjacent = adjacent;
+    static grid(x, y) {
+        if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) {
+            return null;
+        } else {
+            return cells[(y * GRID_SIZE) + x];
+        }
+    }    
 
-    this.draw = function() {
-        fill(this.color);
+    constructor(id, x, y) {
+        // console.log("Cell: " + id + " at " + x + "," + y);
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this._neighbors = null;
+        this.agent = null;
+    }
+
+    draw() {
+        if (this.agent != null) {
+            fill(this.agent.identity * 256);
+        } else {
+            fill(100);
+        }
         stroke(0);
-        rect(this.x * cell_width, this.y * cell_height, (this.x + 1) * cell_width, (this.y + 1) * cell_height);
-    };    
+        strokeWeight(1);
+        rect(this.x * CELL_WIDTH, this.y * CELL_HEIGHT, CELL_WIDTH - 1, CELL_HEIGHT - 1);
+    }
+
+    mousePressed() {
+        if (mouseX > this.x * CELL_WIDTH && mouseX < ((this.x * CELL_WIDTH) + CELL_WIDTH) && mouseY > this.y * CELL_HEIGHT && mouseY < ((this.y * CELL_HEIGHT) + CELL_HEIGHT)) {
+            // console.log("hit!", this.id);
+            this.agent = new Agent(0);
+        }
+    }
+
+    get neighbors() {
+        if (this._neighbors == null) {
+            this._neighbors = [Cell.grid(this.x + 1, this.y), Cell.grid(this.x - 1, this.y), Cell.grid(this.x, this.y + 1), Cell.grid(this.x, this.y - 1), Cell.grid(this.x + 1, this.y + 1), Cell.grid(this.x + 1, this.y - 1), Cell.grid(this.x - 1, this.y + 1), Cell.grid(this.x - 1, this.y - 1)];
+            this._neighbors = this._neighbors.filter(function(obj) { return obj });
+        }
+        return this._neighbors;
+    }
 
 }
 

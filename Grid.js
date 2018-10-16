@@ -1,15 +1,47 @@
-class Cell {
+class Grid {
 
-    static grid(x, y) {
-        if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) {
+    constructor(grid_size) {
+        this.grid_size = grid_size
+        this.cells = []
+        for (let y=0; y<this.grid_size; y++) {    
+            for (let x=0; x<this.grid_size; x++) {
+                this.cells.push(new Cell(this, (y * this.grid_size) + x, x, y))
+            }
+        }
+
+        for (let cell of this.cells) {
+            cell.neighbors
+        }
+
+    }
+
+    find(x, y) {
+        if (x < 0 || x >= this.grid_size || y < 0 || y >= this.grid_size) {
             return null
         } else {
-            return cells[(y * GRID_SIZE) + x]
+            return this.cells[(y * this.grid_size) + x]
         }
-    }    
+    }
 
-    constructor(id, x, y) {
+    draw() {
+        for (let cell of this.cells) {
+            cell.draw()
+        }
+    }
+
+    mousePressed() {
+        for (let cell of this.cells) {
+            cell.mousePressed()
+        }
+    }
+
+}
+
+class Cell {
+
+    constructor(grid, id, x, y) {
         // console.log("Cell: " + id + " at " + x + "," + y)
+        this.grid = grid
         this.id = id
         this.x = x
         this.y = y
@@ -26,6 +58,11 @@ class Cell {
         stroke(0)
         strokeWeight(1)
         rect(this.x * CELL_WIDTH, this.y * CELL_HEIGHT, CELL_WIDTH - 1, CELL_HEIGHT - 1)
+        if (this.agent != null && !this.agent.happy) {
+            strokeWeight(0)
+            fill(256, 50, 50)
+            ellipse((this.x * CELL_WIDTH) + (CELL_WIDTH / 2), (this.y * CELL_HEIGHT) + (CELL_HEIGHT / 2), 8, 8)
+        }
     }
 
     mousePressed() {
@@ -36,7 +73,7 @@ class Cell {
 
     get neighbors() {
         if (this._neighbors == null) {
-            this._neighbors = [Cell.grid(this.x + 1, this.y), Cell.grid(this.x - 1, this.y), Cell.grid(this.x, this.y + 1), Cell.grid(this.x, this.y - 1), Cell.grid(this.x + 1, this.y + 1), Cell.grid(this.x + 1, this.y - 1), Cell.grid(this.x - 1, this.y + 1), Cell.grid(this.x - 1, this.y - 1)]
+            this._neighbors = [this.grid.find(this.x + 1, this.y), this.grid.find(this.x - 1, this.y), this.grid.find(this.x, this.y + 1), this.grid.find(this.x, this.y - 1), this.grid.find(this.x + 1, this.y + 1), this.grid.find(this.x + 1, this.y - 1), this.grid.find(this.x - 1, this.y + 1), this.grid.find(this.x - 1, this.y - 1)]
             this._neighbors = this._neighbors.filter(function(obj) { return obj })
         }
         return this._neighbors

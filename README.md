@@ -1,1 +1,3 @@
-# segsim
+# Homophily Simulator
+
+

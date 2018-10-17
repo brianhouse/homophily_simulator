@@ -23,6 +23,14 @@ class Grid {
         }
     }
 
+    indexOpen() {
+        let open_cells = []
+        for (let i=0; i<grid.cells.length; i++) {
+            open_cells.push(i)
+        }
+        return open_cells
+    }    
+
     draw() {
         for (let cell of this.cells) {
             cell.draw()

@@ -14,11 +14,7 @@ function setup() {
 
     grid = new Grid(GRID_SIZE)
 
-    let open_cells = []
-    for (let i=0; i<grid.cells.length; i++) {
-        open_cells.push(i)
-    }
-
+    let open_cells = grid.indexOpen()
     let num_agents = floor((GRID_SIZE * GRID_SIZE) * (DENSITY / 100))
     for (let i=0; i<num_agents; i++) {
         let agent = null
@@ -33,6 +29,9 @@ function setup() {
         open_cells.splice(index, 1)    
         agent.move(grid.cells[cell_num])    
     }
+    for (let agent of agents) {
+        agent.updateStatus()
+    }
 
     frameRate(10)
 
@@ -42,8 +41,11 @@ function draw() {
     background(220, 100, 100)
     grid.draw()
     for (let agent of agents) {
-        agent.update()
+        agent.updatePosition()
     }
+    for (let agent of agents) {
+        agent.updateStatus()
+    }    
 }
 
 function mousePressed() {

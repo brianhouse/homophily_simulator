@@ -7,7 +7,7 @@ class Agent {
         this.happy = true
     }
 
-    update() {
+    updateStatus() {
         let owns = 0
         for (let neighbor of this.neighbors) {
             if (neighbor.identity == this.identity) {
@@ -20,6 +20,10 @@ class Agent {
             this.happy = true
         }
     }   
+
+    updatePosition() {
+        // let open_cells = grid.indexOpen()
+    }
 
     move(cell) {
         if (this.cell != null) {

@@ -8,7 +8,7 @@ let a = 0
 
 let grid_size_field = null
 let steps_checkbox = null
-let started = false
+let running = false
 
 function setup() { 
 
@@ -58,26 +58,37 @@ function init() {
 }
 
 function draw() { 
-    // if (started) {
-         for (let z=0; z<max(1, floor(grid_size / 30)); z++) {
-            let i = 0
-            while (i < agents.length && !agents[a % agents.length].updatePosition()) {
-                a += 1
-                i += 1 // dont check an agent more than once per frame
-            }
-            for (let agent of agents) {
-                agent.updateStatus()
-            }    
-            if (i == agents.length) {
-                noLoop()   
-                // started = false
-                console.log("done")
+
+    if (running) {  // if not running, this is just a one-time grid draw
+        for (let i=0; i<max(1, (floor((grid_size * grid_size * grid_size) / 1600))); i++) {
+            if (!update()) {
+                noLoop()
+                running = false
                 break
-            }    
-        }// while (!steps_checkbox.elt.checked)
-    // }
+            }
+        }
+    }
     background(256)
     grid.draw()
+}
+
+function update() {
+
+    // find an agent who can make a happy change
+    let i = 0
+    while (i < agents.length) {
+        if (agents[a++ % agents.length].updatePosition()) break
+        i += 1 
+    }
+
+    // update everyone else's status
+    for (let agent of agents) {
+        agent.updateStatus()
+    }    
+
+    // if no one changed position, then game is over
+    return i == agents.length ? false : true
+
 }
 
 function mousePressed() {
@@ -85,12 +96,12 @@ function mousePressed() {
 }
 
 function runClicked() {
-    // started = true
+    running = true
     loop()
 }
 
 function resetClicked() {
-    // start = false
+    running = false
     init()
     redraw()
 }

@@ -79,7 +79,7 @@ class Cell {
         if (this.agent != null && !this.agent.happy) {
             strokeWeight(0)
             fill(256, 50, 50)
-            ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 2, this.grid.cell_size / 2)
+            ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 4, this.grid.cell_size / 4)
         }
     }
 

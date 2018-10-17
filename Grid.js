@@ -2,6 +2,7 @@ class Grid {
 
     constructor(grid_size) {
         this.grid_size = grid_size
+        this.cell_size = width / this.grid_size
         this.cells = []
         for (let y=0; y<this.grid_size; y++) {    
             for (let x=0; x<this.grid_size; x++) {
@@ -23,11 +24,14 @@ class Grid {
         }
     }
 
-    indexOpen() {
+    openCells() {
         let open_cells = []
-        for (let i=0; i<grid.cells.length; i++) {
-            open_cells.push(i)
+        for (let cell of this.cells) {
+            if (cell.agent == null) {
+                open_cells.push(cell)
+            }
         }
+        shuffleArray(open_cells)
         return open_cells
     }    
 
@@ -59,22 +63,30 @@ class Cell {
 
     draw() {
         if (this.agent != null) {
-            fill(this.agent.identity * 256)
+            if (this.agent.identity) {
+                fill(0, 220, 0)
+            } else {
+                fill(0, 0, 256)
+            }
         } else {
-            fill(128)
+            fill(256)
         }
-        stroke(0)
-        strokeWeight(1)
-        rect(this.x * CELL_WIDTH, this.y * CELL_HEIGHT, CELL_WIDTH - 1, CELL_HEIGHT - 1)
+        stroke(256)
+        if (this.grid.grid_size > 30) {
+            strokeWeight(1)
+        } else {
+            strokeWeight(2)
+        }
+        rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
         if (this.agent != null && !this.agent.happy) {
             strokeWeight(0)
             fill(256, 50, 50)
-            ellipse((this.x * CELL_WIDTH) + (CELL_WIDTH / 2), (this.y * CELL_HEIGHT) + (CELL_HEIGHT / 2), 8, 8)
+            ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 2, this.grid.cell_size / 2)
         }
     }
 
     mousePressed() {
-        if (mouseX > this.x * CELL_WIDTH && mouseX < ((this.x * CELL_WIDTH) + CELL_WIDTH) && mouseY > this.y * CELL_HEIGHT && mouseY < ((this.y * CELL_HEIGHT) + CELL_HEIGHT)) {
+        if (mouseX > this.x * this.grid.cell_size && mouseX < ((this.x * this.grid.cell_size) + this.grid.cell_size) && mouseY > this.y * this.grid.cell_size && mouseY < ((this.y * this.grid.cell_size) + this.grid.cell_size)) {
             console.log("hit!", this.id)
         }
     }

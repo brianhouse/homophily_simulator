@@ -22,7 +22,20 @@ class Agent {
     }   
 
     updatePosition() {
-        // let open_cells = grid.indexOpen()
+        if (this.happy) {
+            return false
+        }
+        let original_cell = this.cell
+        let open_cells = grid.openCells()
+        let c = 0
+        while (!this.happy && c < open_cells.length) {
+            this.move(open_cells[c++])
+            this.updateStatus()
+        }
+        if (c == open_cells.length) {
+            this.move(original_cell)
+        }
+        return true
     }
 
     move(cell) {

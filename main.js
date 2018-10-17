@@ -1,21 +1,40 @@
-const GRID_SIZE = 20
-const CELL_WIDTH = 20
-const CELL_HEIGHT = 20
-const DENSITY = 40
+const DENSITY = 80
 
+let grid_size = 20
+
+let cell_size = null
 let grid = null
 let agents = []
+let a = 0
+let grid_size_field = null
 
 function setup() { 
 
-    let canvas = createCanvas(CELL_WIDTH * GRID_SIZE, CELL_HEIGHT * GRID_SIZE) 
+    let canvas = createCanvas(600, 600) 
     console.log(width, height)
     canvas.parent('p5')    
 
-    grid = new Grid(GRID_SIZE)
+    let run_button = select('#run')
+    run_button.mousePressed(runClicked)
 
-    let open_cells = grid.indexOpen()
-    let num_agents = floor((GRID_SIZE * GRID_SIZE) * (DENSITY / 100))
+    let reset_button = select('#reset')
+    reset_button.mousePressed(resetClicked)
+
+    let grid_button = select('#grid')
+    grid_size_field = select('#grid_size')
+    grid_button.mousePressed(setGrid)
+
+    // frameRate(60)
+    noLoop()
+    init()
+} 
+
+function init() {    
+    agents = []
+    a = 0        
+    grid = new Grid(grid_size)
+    let open_cells = grid.openCells()
+    let num_agents = floor((grid_size * grid_size) * (DENSITY / 100))
     for (let i=0; i<num_agents; i++) {
         let agent = null
         if (i < num_agents / 2) {
@@ -24,30 +43,50 @@ function setup() {
             agent = new Agent(1)
         }
         agents.push(agent)
-        let index = floor(random() * open_cells.length)
-        let cell_num = open_cells[index]
-        open_cells.splice(index, 1)    
-        agent.move(grid.cells[cell_num])    
+        let c = floor(random() * open_cells.length)
+        agent.move(open_cells[c])    
+        open_cells.splice(c, 1)   
     }
     for (let agent of agents) {
         agent.updateStatus()
     }
-
-    frameRate(10)
-
-} 
+}
 
 function draw() { 
-    background(220, 100, 100)
+    background(256)
     grid.draw()
-    for (let agent of agents) {
-        agent.updatePosition()
+    let i = 0
+    while (i < agents.length && !agents[a % agents.length].updatePosition()) {
+        a += 1
+        i += 1 // dont check an agent more than once per frame
     }
     for (let agent of agents) {
         agent.updateStatus()
+    }    
+    if (i == agents.length) {
+        noLoop()   
     }    
 }
 
 function mousePressed() {
     grid.mousePressed()
 }
+
+function runClicked() {
+    loop()
+}
+
+function resetClicked() {
+    init()
+    redraw()
+}
+
+function setGrid() {
+    let gs = parseInt(grid_size_field.value())
+    if (gs != grid_size) {
+        grid_size = gs
+        init()
+        redraw()        
+    }
+}
+

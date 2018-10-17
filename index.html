@@ -3,7 +3,9 @@
     <meta charset="UTF-8">
     <title>Homophily Simulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+    <script src="util.js"></script>
     <script src="Grid.js"></script>
     <script src="Agent.js"></script>    
     <script src="main.js"></script>
@@ -12,15 +14,32 @@
         html, body {
             margin: 0;
             padding: 0;
+            font-family: monospace;
         }
 
         #p5 {
             margin: 100px;
         }
 
+        #controls {
+            margin: 100px;
+        }
+
+        a {
+            color: black;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
     <div id="p5"></div>
+    <div id="controls">
+        GRID SIZE <input id="grid_size" type="text" size="2" maxlength="2" value="20" /> <button id="grid">SET</button>
+        <br /><br />
+        <button id="run">RUN</button>
+        <br /><br />
+        <button id="reset">RESET</button>
+    </div>
 </body>
 </html>

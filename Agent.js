@@ -1,7 +1,7 @@
 class Agent {
 
     constructor(identity) {
-        this.homogeneity_min = 1/3
+        this.homogeneity_min = 3/4
         this.identity = identity
         this.cell = null
         this.happy = true
@@ -32,10 +32,11 @@ class Agent {
             this.move(open_cells[c++])
             this.updateStatus()
         }
-        if (c == open_cells.length) {
-            this.move(original_cell)
+        if (!this.happy) {
+            return false
+        } else {
+            return true
         }
-        return true
     }
 
     move(cell) {

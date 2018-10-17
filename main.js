@@ -1,12 +1,14 @@
 const DENSITY = 80
 
-let grid_size = 20
+let grid_size = null
 
-let cell_size = null
 let grid = null
 let agents = []
 let a = 0
+
 let grid_size_field = null
+let steps_checkbox = null
+let started = false
 
 function setup() { 
 
@@ -23,8 +25,11 @@ function setup() {
     let grid_button = select('#grid')
     grid_size_field = select('#grid_size')
     grid_button.mousePressed(setGrid)
+    grid_size = parseInt(grid_size_field.value())
 
-    // frameRate(60)
+    steps_checkbox = select('#show_steps')
+
+    frameRate(60)
     noLoop()
     init()
 } 
@@ -53,19 +58,26 @@ function init() {
 }
 
 function draw() { 
+    // if (started) {
+         for (let z=0; z<max(1, floor(grid_size / 30)); z++) {
+            let i = 0
+            while (i < agents.length && !agents[a % agents.length].updatePosition()) {
+                a += 1
+                i += 1 // dont check an agent more than once per frame
+            }
+            for (let agent of agents) {
+                agent.updateStatus()
+            }    
+            if (i == agents.length) {
+                noLoop()   
+                // started = false
+                console.log("done")
+                break
+            }    
+        }// while (!steps_checkbox.elt.checked)
+    // }
     background(256)
     grid.draw()
-    let i = 0
-    while (i < agents.length && !agents[a % agents.length].updatePosition()) {
-        a += 1
-        i += 1 // dont check an agent more than once per frame
-    }
-    for (let agent of agents) {
-        agent.updateStatus()
-    }    
-    if (i == agents.length) {
-        noLoop()   
-    }    
 }
 
 function mousePressed() {
@@ -73,10 +85,12 @@ function mousePressed() {
 }
 
 function runClicked() {
+    // started = true
     loop()
 }
 
 function resetClicked() {
+    // start = false
     init()
     redraw()
 }

@@ -9,11 +9,9 @@ class Grid {
                 this.cells.push(new Cell(this, (y * this.grid_size) + x, x, y))
             }
         }
-
         for (let cell of this.cells) {
             cell.neighbors
         }
-
     }
 
     find(x, y) {
@@ -64,9 +62,9 @@ class Cell {
     draw() {
         if (this.agent != null) {
             if (this.agent.identity) {
-                fill(0, 220, 0)
+                fill(0, 180, 0)
             } else {
-                fill(0, 0, 256)
+                fill(0, 0, 220)
             }
         } else {
             fill(256)

@@ -1,12 +1,13 @@
 let population_field = null
 let density_field = null
+let attitude_field = null
+
 let grid_size = null
 let population_size = null
 
-let attitude_field = null
-
 let running = false
 
+let loaded_population = null
 let grid = null
 let agents = []
 let a = 0
@@ -35,6 +36,10 @@ function setup() {
 
     //
 
+    population_file = createFileInput(loadPopulation)
+    population_file.position(250, 750)
+    loadJSON("temp_pop_0.json", loadPopulation)
+
     frameRate(60)
     noLoop()
     setGrid()    
@@ -62,7 +67,6 @@ function init() {
 }
 
 function draw() { 
-
     if (running) {  // if not running, this is just a one-time grid draw
         for (let i=0; i<max(1, (floor((grid_size * grid_size * grid_size) / 1600))); i++) {
             if (!update()) {
@@ -120,6 +124,26 @@ function setGrid() {
         init()
         redraw()        
     }
+}
+
+function loadPopulation(json) {
+    console.log(json)
+    loaded_population = []
+    for (let key in json) {
+        let group = json[key]['group'] == 'A' ? 0 : 1
+        let attitude = json[key]['attitude']
+        console.log(group, attitude)
+        loaded_population.push({group: group, attitude: attitude})
+    }
+    population_field.value(loaded_population.length)
+    // console.log(file)
+    // console.log(JSON)    
+    // console.log(JSON.parse(file.data))
+}
+
+function setPopulation() {
+
+
 }
 
 function setAttitude() {

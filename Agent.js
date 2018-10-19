@@ -5,6 +5,7 @@ class Agent {
         this.group = group
         this.cell = null
         this.happy = true
+        this.homogeneity = 0
     }
 
     updateStatus() {
@@ -14,7 +15,8 @@ class Agent {
                 owns += 1
             }
         }
-        if ((owns / this.neighbors.length) < this.attitude) {
+        this.homogeneity = (owns / this.neighbors.length)
+        if (this.homogeneity < this.attitude) {
             this.happy = false
         } else {
             this.happy = true
@@ -22,23 +24,27 @@ class Agent {
     }   
 
     updatePosition() {
-        // returns whether moved or not
+        // returns bool: moved?
         if (this.happy) {
             return false
         }
         let original_cell = this.cell
         let open_cells = grid.openCells()
-        let c = 0
+        let best_homogeneity = this.homogeneity
+        let best_unhappy_cell = this.cell
+        let c = 0        
         while (!this.happy && c < open_cells.length) {
             this.move(open_cells[c++])
             this.updateStatus()
+            if (this.homogeneity > best_homogeneity) {
+                best_homogeneity = this.homogeneity
+                best_unhappy_cell = this.cell
+            }
         }
         if (!this.happy) {
-            this.move(original_cell)        // interesting
-            return false
-        } else {
-            return true
+            this.move(best_unhappy_cell)
         }
+        return true
     }
 
     move(cell) {

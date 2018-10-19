@@ -60,27 +60,37 @@ class Cell {
     }
 
     draw() {
-        if (this.agent != null) {
-            if (this.agent.group) {
-                fill("#68b859")
-            } else {
-                fill("#34789a")
-            }
-        } else {
-            fill(256)
-        }
+        if (this.agent == null) return
+
+        // set stroke
         stroke(256)
         if (this.grid.grid_size > 30) {
             strokeWeight(1)
         } else {
             strokeWeight(2)
         }
-        rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
-        if (this.agent != null && !this.agent.happy) {
+
+        // set fill
+        if (this.agent.attitude > 0.5) {
+            fill("#68b859")
+        } else {
+            fill("#34789a")
+        }
+
+        // set shape
+        if (this.agent.group) {
+            rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
+        } else {
+            ellipse(this.x * this.grid.cell_size + this.grid.cell_size / 2, this.y * this.grid.cell_size + this.grid.cell_size / 2, this.grid.cell_size, this.grid.cell_size)            
+        }
+
+        // add happiness indicator
+        if (!this.agent.happy) {
             strokeWeight(0)
             fill("#d74c34")
             ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 4, this.grid.cell_size / 4)
         }
+
     }
 
     mousePressed() {

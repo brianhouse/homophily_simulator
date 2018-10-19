@@ -38,7 +38,7 @@ function setup() {
 
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
-    loadJSON("temp_pop_0.json", loadPopulation)
+    // loadJSON("temp_pop_0.json", loadPopulation)
 
     frameRate(60)
     noLoop()

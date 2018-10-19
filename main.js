@@ -34,18 +34,17 @@ function setup() {
 
     attitude_field = select('#attitude_field')
     attitude_field.changed(setAttitude)
+    attitude = parseFloat(attitude_field.value())    
 
     //
 
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
-    // loadJSON("temp_pop_0.json", loadPopulation)
+    loadJSON("temp_pop_0.json", loadPopulation)
 
     frameRate(60)
     noLoop()
-    setGrid()    
-    setAttitude()
-    init()
+    setGrid()
 } 
 
 function init() {    
@@ -53,10 +52,20 @@ function init() {
     a = 0        
     grid = new Grid(grid_size)
     let open_cells = grid.openCells()
+    if (loaded_population) {
+        console.log('Loading population from file')
+    } else {
+        console.log('Loading random population')
+    }
     for (let i=0; i<population_size; i++) {
 
         // loading will go here
-        let agent = new Agent(round(random(0, 1)), attitude)
+        let agent = null
+        if (loaded_population == null) {
+            agent = new Agent(round(random(0, 1)), attitude)
+        } else {
+            agent = new Agent(loaded_population[i].group, loaded_population[i].attitude)
+        }
 
         agents.push(agent)
         let c = floor(random() * open_cells.length)
@@ -119,6 +128,10 @@ function resetClicked() {
 function setGrid() {
     let density = parseInt(density_field.value())
     let ps = parseInt(population_field.value())
+    if (loaded_population != null && ps != population_size) {
+        ps = population_size
+        population_field.value(ps)
+    }
     let gs = ceil(sqrt((ps / density) * 100))
     if (gs != grid_size || ps != population_size) {
         grid_size = gs
@@ -129,18 +142,29 @@ function setGrid() {
 }
 
 function loadPopulation(json) {
-    console.log(json)
     loaded_population = []
     for (let key in json) {
         let group = json[key]['group'] == 'A' ? 0 : 1
-        let attitude = json[key]['attitude']
-        console.log(group, attitude)
+        let attitude = null
+        if (json[key]['attitude'] == "liberal") {
+            attitude = 1/3
+        // } else if (json[key]['attitude'] == "illberal") {
+        //     attitude = 1
+        // } else {
+        //     attitude = random(0, 1)
+        // }
+        } else {
+            attitude = 2/3
+        }
         loaded_population.push({group: group, attitude: attitude})
     }
-    population_field.value(loaded_population.length)
-    // console.log(file)
-    // console.log(JSON)    
-    // console.log(JSON.parse(file.data))
+
+    population_size = loaded_population.length
+    population_field.value(population_size)
+    
+    attitude_field.value('--')
+    console.log('Parsed population file')
+    setGrid()
 }
 
 function setPopulation() {

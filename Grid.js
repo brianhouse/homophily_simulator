@@ -62,9 +62,9 @@ class Cell {
     draw() {
         if (this.agent != null) {
             if (this.agent.identity) {
-                fill(0, 180, 0)
+                fill("#68b859")
             } else {
-                fill(0, 0, 220)
+                fill("#34789a")
             }
         } else {
             fill(256)
@@ -78,7 +78,7 @@ class Cell {
         rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
         if (this.agent != null && !this.agent.happy) {
             strokeWeight(0)
-            fill(256, 50, 50)
+            fill("#d74c34")
             ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 4, this.grid.cell_size / 4)
         }
     }

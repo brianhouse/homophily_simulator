@@ -3,6 +3,8 @@ let density_field = null
 let grid_size = null
 let population_size = null
 
+let attitude_field = null
+
 let running = false
 
 let grid = null
@@ -30,6 +32,14 @@ function setup() {
     population_button.mousePressed(setGrid)
     density_button.mousePressed(setGrid)    
 
+    //
+
+    let attitude_button = select('#attitude_button')
+    attitude_field = select('#attitude_field')
+    attitude_button.mousePressed(setAttitude)       
+
+    //
+
     frameRate(60)
     noLoop()
     setGrid()    
@@ -44,12 +54,7 @@ function init() {
     for (let i=0; i<population_size; i++) {
 
         // loading will go here
-        let agent = null
-        if (i < population_size / 2) {
-            agent = new Agent(0)
-        } else {
-            agent = new Agent(1)
-        }
+        let agent = new Agent(round(random(0, 1)), random(0, 1))
 
         agents.push(agent)
         let c = floor(random() * open_cells.length)
@@ -121,4 +126,13 @@ function setGrid() {
         init()
         redraw()        
     }
+}
+
+function setAttitude() {
+    let attitude = parseInt(attitude_field.value())
+    for (let agent of agents) {
+        agent.attitude = attitude
+    }
+    update()
+    redraw()
 }

@@ -61,7 +61,7 @@ class Cell {
 
     draw() {
         if (this.agent != null) {
-            if (this.agent.attitude) {
+            if (this.agent.group) {
                 fill("#68b859")
             } else {
                 fill("#34789a")

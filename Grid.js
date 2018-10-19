@@ -71,14 +71,16 @@ class Cell {
         }
 
         // set fill
-        if (this.agent.attitude > 0.5) {
+        if (this.agent.group) {        
+        // if (this.agent.attitude > 0.5) {
             fill("#68b859")
         } else {
             fill("#34789a")
         }
 
         // set shape
-        if (this.agent.group) {
+        // if (this.agent.group) {
+        if (this.agent.attitude > 0.5) {            
             rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
         } else {
             ellipse(this.x * this.grid.cell_size + this.grid.cell_size / 2, this.y * this.grid.cell_size + this.grid.cell_size / 2, this.grid.cell_size, this.grid.cell_size)            

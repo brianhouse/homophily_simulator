@@ -4,6 +4,7 @@ let attitude_field = null
 
 let grid_size = null
 let population_size = null
+let attitude = null
 
 let running = false
 
@@ -43,6 +44,7 @@ function setup() {
     frameRate(60)
     noLoop()
     setGrid()    
+    setAttitude()
     init()
 } 
 
@@ -54,7 +56,7 @@ function init() {
     for (let i=0; i<population_size; i++) {
 
         // loading will go here
-        let agent = new Agent(round(random(0, 1)), random(0, 1))
+        let agent = new Agent(round(random(0, 1)), attitude)
 
         agents.push(agent)
         let c = floor(random() * open_cells.length)
@@ -147,7 +149,7 @@ function setPopulation() {
 }
 
 function setAttitude() {
-    let attitude = parseFloat(attitude_field.value())
+    attitude = parseFloat(attitude_field.value())
     for (let agent of agents) {
         agent.attitude = attitude
         agent.updateStatus()

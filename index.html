@@ -37,9 +37,16 @@
 <body>
     <div id="p5"></div>
     <div id="controls">
-        GRID SIZE <input id="grid_size" type="text" size="2" maxlength="2" value="40" /> <button id="grid">SET</button>
+        <table>
+            <tr>
+                <td>POPULATION</td><td><input id="population_field" type="text" size="3" maxlength="3" value="600" /> <button id="population_button">SET</button></td>
+            </tr>
+            <tr>
+                <td>DENSITY</td><td><input id="density_field" type="text" size="3" maxlength="3" value="70" /> <button id="density_button">SET</button></td>
+            </tr>
+        </table>
         <br /><br />
-        <button id="run">RUN</button> <!-- SHOW STEPS <input type="checkbox" id="show_steps" checked="unchecked" /> -->
+        <button id="run">RUN</button>
         <br /><br />
         <button id="reset">RESET</button>
     </div>

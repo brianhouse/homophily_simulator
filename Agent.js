@@ -1,8 +1,8 @@
 class Agent {
 
-    constructor(identity) {
+    constructor(attitude) {
         this.homogeneity_min = 1/3
-        this.identity = identity
+        this.attitude = attitude
         this.cell = null
         this.happy = true
     }
@@ -10,7 +10,7 @@ class Agent {
     updateStatus() {
         let owns = 0
         for (let neighbor of this.neighbors) {
-            if (neighbor.identity == this.identity) {
+            if (neighbor.attitude == this.attitude) {
                 owns += 1
             }
         }

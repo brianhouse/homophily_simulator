@@ -1,14 +1,13 @@
-const DENSITY = 80
-
+let population_field = null
+let density_field = null
 let grid_size = null
+let population_size = null
+
+let running = false
 
 let grid = null
 let agents = []
 let a = 0
-
-let grid_size_field = null
-let steps_checkbox = null
-let running = false
 
 function setup() { 
 
@@ -22,15 +21,18 @@ function setup() {
     let reset_button = select('#reset')
     reset_button.mousePressed(resetClicked)
 
-    let grid_button = select('#grid')
-    grid_size_field = select('#grid_size')
-    grid_button.mousePressed(setGrid)
-    grid_size = parseInt(grid_size_field.value())
+    let population_button = select('#population_button')
+    population_field = select('#population_field')
 
-    steps_checkbox = select('#show_steps')
+    let density_button = select('#density_button')
+    density_field = select('#density_field')
+
+    population_button.mousePressed(setGrid)
+    density_button.mousePressed(setGrid)    
 
     frameRate(60)
     noLoop()
+    setGrid()    
     init()
 } 
 
@@ -39,14 +41,16 @@ function init() {
     a = 0        
     grid = new Grid(grid_size)
     let open_cells = grid.openCells()
-    let num_agents = floor((grid_size * grid_size) * (DENSITY / 100))
-    for (let i=0; i<num_agents; i++) {
+    for (let i=0; i<population_size; i++) {
+
+        // loading will go here
         let agent = null
-        if (i < num_agents / 2) {
+        if (i < population_size / 2) {
             agent = new Agent(0)
         } else {
             agent = new Agent(1)
         }
+
         agents.push(agent)
         let c = floor(random() * open_cells.length)
         agent.move(open_cells[c])    
@@ -107,11 +111,14 @@ function resetClicked() {
 }
 
 function setGrid() {
-    let gs = parseInt(grid_size_field.value())
-    if (gs != grid_size) {
+    let density = parseInt(density_field.value())
+    let ps = parseInt(population_field.value())
+    let gs = ceil(sqrt((ps / density) * 100))
+    console.log(density, ps, gs)
+    if (gs != grid_size || ps != population_size) {
         grid_size = gs
+        population_size = ps
         init()
         redraw()        
     }
 }
-

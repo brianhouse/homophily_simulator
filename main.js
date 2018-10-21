@@ -40,7 +40,9 @@ function setup() {
 
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
-    loadJSON("temp_pop_0.json", loadPopulation)
+
+    // document.getElementById('file_upload').addEventListener('change', onChange);    
+    // loadJSON("temp_pop_0.json", loadPopulation)
 
     frameRate(60)
     noLoop()
@@ -141,35 +143,33 @@ function setGrid() {
     }
 }
 
-function loadPopulation(json) {
-    loaded_population = []
-    for (let key in json) {
-        let group = json[key]['group'] == 'A' ? 0 : 1
-        let attitude = null
-        if (json[key]['attitude'] == "liberal") {
-            attitude = 1/3
-        // } else if (json[key]['attitude'] == "illberal") {
-        //     attitude = 1
-        // } else {
-        //     attitude = random(0, 1)
-        // }
-        } else {
-            attitude = 2/3
+function loadPopulation(file) {
+    let reader = new FileReader();
+    reader.onload = function(event) {
+        let json = JSON.parse(event.target.result);
+        loaded_population = []
+        for (let key in json) {
+            let group = json[key]['group'] == 'A' ? 0 : 1
+            let attitude = null
+            if (json[key]['attitude'] == "liberal") {
+                attitude = 1/3
+            // } else if (json[key]['attitude'] == "illberal") {
+            //     attitude = 1
+            // } else {
+            //     attitude = random(0, 1)
+            // }
+            } else {
+                attitude = 2/3
+            }
+            loaded_population.push({group: group, attitude: attitude})
         }
-        loaded_population.push({group: group, attitude: attitude})
+        population_size = loaded_population.length
+        population_field.value(population_size)        
+        attitude_field.value('--')
+        console.log('Parsed population file')
+        setGrid()
     }
-
-    population_size = loaded_population.length
-    population_field.value(population_size)
-    
-    attitude_field.value('--')
-    console.log('Parsed population file')
-    setGrid()
-}
-
-function setPopulation() {
-
-
+    reader.readAsText(file.file);
 }
 
 function setAttitude() {

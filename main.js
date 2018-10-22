@@ -13,8 +13,8 @@ let grid = null
 let agents = []
 let a = 0
 
-let c1 = "white" //"#68b859"
-let c2 = "black" // "#34789a"
+let c1 = "lightblue" //"#68b859"
+let c2 = "darkblue" // "#34789a"
 
 function setup() { 
 
@@ -33,9 +33,9 @@ function setup() {
     density_field = select('#density_field')
     density_field.changed(setGrid)    
 
-    attitude_field = select('#attitude_field')
-    attitude_field.changed(setAttitude)
-    attitude = parseFloat(attitude_field.value())    
+    // attitude_field = select('#attitude_field')
+    // attitude_field.changed(setAttitude)
+    // attitude = parseFloat(attitude_field.value())    
 
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
@@ -63,7 +63,7 @@ function init() {
         // loading will go here
         let agent = null
         if (loaded_population == null) {
-            agent = new Agent(round(random(0, 1)), attitude)
+            agent = new Agent(round(random(0, 1)), random(0, 1))
         } else {
             agent = new Agent(loaded_population[i].group, loaded_population[i].attitude)
         }

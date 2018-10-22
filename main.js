@@ -30,19 +30,12 @@ function setup() {
     density_field = select('#density_field')
     density_field.changed(setGrid)    
 
-    //
-
     attitude_field = select('#attitude_field')
     attitude_field.changed(setAttitude)
     attitude = parseFloat(attitude_field.value())    
 
-    //
-
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
-
-    // document.getElementById('file_upload').addEventListener('change', onChange);    
-    // loadJSON("temp_pop_0.json", loadPopulation)
 
     frameRate(60)
     noLoop()
@@ -174,6 +167,10 @@ function loadPopulation(file) {
 
 function setAttitude() {
     attitude = parseFloat(attitude_field.value())
+    if (loaded_population != null) {
+        attitude_field.value("--")
+        return
+    }    
     for (let agent of agents) {
         agent.attitude = attitude
         agent.updateStatus()

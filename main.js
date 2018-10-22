@@ -163,8 +163,10 @@ function loadPopulation(file) {
             loaded_population.push({group: group, attitude: attitude})
         }
         population_size = loaded_population.length
-        population_field.value(population_size)        
-        attitude_field.value('--')
+        population_field.value(population_size)     
+        if (attitude_field != null) {
+            attitude_field.value('--')
+        }
         console.log('Parsed population file')
         setGrid()
     }

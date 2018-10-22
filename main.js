@@ -13,6 +13,9 @@ let grid = null
 let agents = []
 let a = 0
 
+let c1 = "white" //"#68b859"
+let c2 = "black" // "#34789a"
+
 function setup() { 
 
     let canvas = createCanvas(600, 600) 
@@ -36,6 +39,9 @@ function setup() {
 
     population_file = createFileInput(loadPopulation)
     population_file.position(250, 750)
+
+    c1 = color(c1)
+    c2 = color(c2)    
 
     frameRate(60)
     noLoop()

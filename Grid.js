@@ -70,13 +70,8 @@ class Cell {
             strokeWeight(2)
         }
 
-        // set fill
-        // if (this.agent.group) {        
-        if (this.agent.attitude > 0.5) {
-            fill("#68b859")
-        } else {
-            fill("#34789a")
-        }
+        // set color to interpolate based on attitude
+        fill(lerpColor(c1, c2, this.agent.attitude))
 
         // set shape
         if (this.agent.group) {

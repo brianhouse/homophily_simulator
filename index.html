@@ -65,10 +65,10 @@
     <div id="controls">
         <table>
             <tr>
-                <td>POPULATION</td><td><input id="population_field" type="text" size="3" maxlength="4" value="600" /></td>
+                <td>POPULATION</td><td><input id="population_field" type="text" size="3" maxlength="4" value="1000" /></td>
             </tr>
             <tr>
-                <td>DENSITY</td><td><input id="density_field" type="text" size="3" maxlength="3" value="70" /></td>
+                <td>DENSITY</td><td><input id="density_field" type="text" size="3" maxlength="3" value="50" /></td>
             </tr>
          </table>
         <br />
@@ -81,10 +81,12 @@
             <li>There are two immutable groups, circle and square</li>
             <li>Each agent also has an "attitude" which is a continuous value</li>
             <br />
-            <li>Agents want to be surrounded by other agents with similar values <i>on average</i></li>
-            <li>If there is too large a discrepancy, the agent will be unhappy (marked with a red dot)</li>
+            <li>Agents prefer to be surrounded by other agents of their same group to an extent determined by their attitude</li>
+            <li>If it's too mixed, the agent will be unhappy (marked with a red dot)</li>
             <li>If an agent is unhappy, it will try to move somewhere where it is happier</li>
             <li>Agents are also <i>affected</i> by the attitudes of the agents around them, which is turn may affect their happiness and desire to move</li>
+            <br />
+            <li>The simulation stops when all agents are happy</li>
         </ul>
     </div>
 </body>

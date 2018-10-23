@@ -15,6 +15,8 @@ let a = 0
 
 let c1 = "lightblue" //"#68b859"
 let c2 = "darkblue" // "#34789a"
+// let c1 = "blue"
+// let c2 = "red"
 
 let simulation = function(s) { 
 
@@ -61,7 +63,10 @@ let simulation = function(s) {
             // loading will go here
             let agent = null
             if (loaded_population == null) {
-                agent = new Agent(Math.round(Math.random(0, 1)), Math.random(0, 1))
+                let group = Math.round(Math.random(0, 1))
+                let attitude = group
+                // let attitude = Math.random(0, 1)
+                agent = new Agent(group, attitude)
             } else {
                 agent = new Agent(loaded_population[i].group, loaded_population[i].attitude)
             }
@@ -72,15 +77,15 @@ let simulation = function(s) {
             open_cells.splice(c, 1)   
         }
         for (let agent of agents) {
-            agent.updateStatus()
+            agent.updateHappiness()
         }
     }
 
     s.draw = function() { 
         if (running) {  // if not running, this is just a one-time grid draw
-            for (let i=0; i<Math.max(1, (Math.floor((grid_size * grid_size * grid_size) / 1600))); i++) {
+            for (let i=0; i<10; i++) {
                 if (!s.update()) {
-                    noLoop()
+                    s.noLoop()
                     running = false
                     break
                 }
@@ -99,17 +104,15 @@ let simulation = function(s) {
             i += 1 
         }
 
-        // update everyone else's status
+        // update everyone else's status (could optimize)
         for (let agent of agents) {
-            agent.updateStatus()
+            agent.updateHappiness()
         }    
 
         // update attitudes
         for (let agent of agents) {
             agent.updateAttitude()
         }    
-
-        return true
 
         // if no one changed position, then game is over
         return i == agents.length ? false : true
@@ -175,7 +178,7 @@ let simulation = function(s) {
             console.log('Parsed population file')
             s.setGrid()
         }
-        reader.readAsText(file.file);
+        reader.readAsText(file.file)
     }
 
 
@@ -187,8 +190,6 @@ let graphs = function(s) {
     s.setup = function() {
         let canvas = s.createCanvas(300, 100)
         canvas.parent('graphs')                   
-        // s.noLoop()
-        s.frameRate = 1
     }
 
     s.draw = function() {
@@ -202,11 +203,12 @@ let graphs = function(s) {
         for (let agent of agents) {
             histogram[Math.floor(agent.attitude * 100)] += 1
         }
+        let max = Math.max.apply(null, histogram)
         for (let h in histogram) {
             let x = (h / 101) * (s.width - 2)
             x += 2
             s.stroke(s.lerpColor(c1, c2, h / 101))
-            let y = (1 - (histogram[h] / 40)) * s.height            
+            let y = (1 - (histogram[h] / max)) * s.height            
             s.line(x, s.height, x, y)
         }        
     }

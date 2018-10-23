@@ -58,6 +58,7 @@ class Cell {
         this.y = y
         this._neighbors = null
         this.agent = null
+        this.color = null
     }
 
     draw(s) {
@@ -72,7 +73,8 @@ class Cell {
         }
 
         // set color to interpolate based on attitude
-        s.fill(s.lerpColor(c1, c2, this.agent.attitude))
+        this.color = s.lerpColor(c1, c2, this.agent.attitude)
+        s.fill(this.color)
 
         // set shape
         if (this.agent.group) {

@@ -21,7 +21,7 @@ let simulation = function(s) {
     s.setup = function() {
 
         let canvas = s.createCanvas(600, 600) 
-        canvas.parent('p5')    
+        canvas.parent('simulation')    
 
         let run_button = s.select('#run')
         run_button.mousePressed(s.runClicked)
@@ -35,12 +35,8 @@ let simulation = function(s) {
         density_field = s.select('#density_field')
         density_field.changed(s.setGrid)    
 
-        // attitude_field = select('#attitude_field')
-        // attitude_field.changed(setAttitude)
-        // attitude = parseFloat(attitude_field.value())    
-
         population_file = s.createFileInput(s.loadPopulation)
-        population_file.position(250, 750)
+        // population_file.position(250, 750)
 
         c1 = s.color(c1)
         c2 = s.color(c2)    
@@ -177,25 +173,48 @@ let simulation = function(s) {
                 attitude_field.value('--')
             }
             console.log('Parsed population file')
-            setGrid()
+            s.setGrid()
         }
         reader.readAsText(file.file);
     }
 
-    s.setAttitude = function() {
-        attitude = parseFloat(attitude_field.value())
-        if (loaded_population != null) {
-            attitude_field.value("--")
-            return
-        }    
-        for (let agent of agents) {
-            agent.attitude = attitude
-            agent.updateStatus()
+
+}
+
+
+let graphs = function(s) { 
+
+    s.setup = function() {
+        let canvas = s.createCanvas(300, 100)
+        canvas.parent('graphs')                   
+        // s.noLoop()
+        s.frameRate = 1
+    }
+
+    s.draw = function() {
+        s.background(255)    
+        s.stroke(0)
+        s.strokeWeight(s.width / 101)
+        let histogram = new Array(101)
+        for (let i = 0; i<101; i++) {
+            histogram[i] = 0
         }
-        redraw()    
+        for (let agent of agents) {
+            histogram[Math.floor(agent.attitude * 100)] += 1
+        }
+        for (let h in histogram) {
+            let x = (h / 101) * (s.width - 2)
+            x += 2
+            s.stroke(s.lerpColor(c1, c2, h / 101))
+            let y = (1 - (histogram[h] / 40)) * s.height            
+            s.line(x, s.height, x, y)
+        }        
     }
 
 }
 
+
+
 new p5(simulation)
+new p5(graphs)
 

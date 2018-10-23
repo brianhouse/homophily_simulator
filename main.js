@@ -106,6 +106,13 @@ function update() {
         agent.updateStatus()
     }    
 
+    // update attitudes
+    for (let agent of agents) {
+        agent.updateAttitude()
+    }    
+
+    return true
+
     // if no one changed position, then game is over
     return i == agents.length ? false : true
 

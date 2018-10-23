@@ -9,6 +9,16 @@ class Agent {
         this.attitude_difference = 1
     }
 
+    updateAttitude() {
+        this.attitude += this.attitude_difference * 0.001
+        if (this.attitude > 1) this.attitude = 1
+        if (this.attitude < 0) this.attitude = 0
+        // if (Math.floor(this.attitude) != 0 && this.attitude != 1) {
+        if (this.attitude == NaN) {
+            console.log(this.attitude)
+        }            
+    }    
+
     updateStatus() {
 
         // // schelling segregation model
@@ -26,11 +36,15 @@ class Agent {
         // }
 
         let attitude_sum = 0
-        for (let neighbor of this.neighbors) {
-            attitude_sum += neighbor.attitude
+        if (this.neighbors.length == 0) {
+            this.attitude_difference = 1
+        } else {
+            for (let neighbor of this.neighbors) {
+                attitude_sum += neighbor.attitude
+            }
+            this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)
         }
-        this.attitude_difference = Math.abs(this.attitude - (attitude_sum / this.neighbors.length))
-        if (this.attitude_difference < .1) {
+        if (Math.abs(this.attitude_difference) < .01) {
             this.happy = true
         } else {
             this.happy = false

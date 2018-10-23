@@ -10,6 +10,7 @@ class Agent {
     }
 
     updateAttitude() {
+        if (this.happy) return
         this.attitude += this.attitude_difference * 0.001
         if (this.attitude > 1) this.attitude = 1
         if (this.attitude < 0) this.attitude = 0

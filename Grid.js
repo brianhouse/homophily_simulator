@@ -1,8 +1,9 @@
 class Grid {
 
-    constructor(grid_size) {
+    constructor(s, grid_size) {
+        this.s = s
         this.grid_size = grid_size
-        this.cell_size = width / this.grid_size
+        this.cell_size = s.width / this.grid_size
         this.cells = []
         for (let y=0; y<this.grid_size; y++) {    
             for (let x=0; x<this.grid_size; x++) {
@@ -35,13 +36,13 @@ class Grid {
 
     draw() {
         for (let cell of this.cells) {
-            cell.draw()
+            cell.draw(this.s)
         }
     }
 
-    mousePressed() {
+    mousePressed(s) {
         for (let cell of this.cells) {
-            cell.mousePressed()
+            cell.mousePressed(s)
         }
     }
 
@@ -59,39 +60,39 @@ class Cell {
         this.agent = null
     }
 
-    draw() {
+    draw(s) {
         if (this.agent == null) return
 
         // set stroke
-        stroke(256)
+        s.stroke(256)
         if (this.grid.grid_size > 30) {
-            strokeWeight(1)
+            s.strokeWeight(1)
         } else {
-            strokeWeight(2)
+            s.strokeWeight(2)
         }
 
         // set color to interpolate based on attitude
-        fill(lerpColor(c1, c2, this.agent.attitude))
+        s.fill(s.lerpColor(c1, c2, this.agent.attitude))
 
         // set shape
         if (this.agent.group) {
         // if (this.agent.attitude > 0.5) {            
-            rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
+            s.rect(this.x * this.grid.cell_size, this.y * this.grid.cell_size, this.grid.cell_size, this.grid.cell_size)
         } else {
-            ellipse(this.x * this.grid.cell_size + this.grid.cell_size / 2, this.y * this.grid.cell_size + this.grid.cell_size / 2, this.grid.cell_size, this.grid.cell_size)            
+            s.ellipse(this.x * this.grid.cell_size + this.grid.cell_size / 2, this.y * this.grid.cell_size + this.grid.cell_size / 2, this.grid.cell_size, this.grid.cell_size)            
         }
 
         // add happiness indicator
         if (!this.agent.happy) {
-            strokeWeight(0)
-            fill("#d74c34")
-            ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 4, this.grid.cell_size / 4)
+            s.strokeWeight(0)
+            s.fill("#d74c34")
+            s.ellipse((this.x * this.grid.cell_size) + (this.grid.cell_size / 2), (this.y * this.grid.cell_size) + (this.grid.cell_size / 2), this.grid.cell_size / 4, this.grid.cell_size / 4)
         }
 
     }
 
-    mousePressed() {
-        if (mouseX > this.x * this.grid.cell_size && mouseX < ((this.x * this.grid.cell_size) + this.grid.cell_size) && mouseY > this.y * this.grid.cell_size && mouseY < ((this.y * this.grid.cell_size) + this.grid.cell_size)) {
+    mousePressed(s) {
+        if (s.mouseX > this.x * this.grid.cell_size && s.mouseX < ((this.x * this.grid.cell_size) + this.grid.cell_size) && s.mouseY > this.y * this.grid.cell_size && s.mouseY < ((this.y * this.grid.cell_size) + this.grid.cell_size)) {
             console.log("hit!", this.id)
         }
     }

@@ -97,7 +97,9 @@ class Cell {
         if (s.mouseX > this.x * this.grid.cell_size && s.mouseX < ((this.x * this.grid.cell_size) + this.grid.cell_size) && s.mouseY > this.y * this.grid.cell_size && s.mouseY < ((this.y * this.grid.cell_size) + this.grid.cell_size)) {
             console.log("hit!", this.id)
             if (this.agent != null) {
-                console.log(this.agent.attitude, this.agent.neighbors_attitude, this.agent.attitude_adjustment)
+                console.log(this.agent)
+            } else {
+                console.log("No agent")
             }
         }
     }

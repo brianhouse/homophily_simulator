@@ -6,10 +6,7 @@ class Agent {
         this.cell = null
         this.homogeneity = 0
         this.happy = true   
-        // this.attitude_difference = 1                     
-
-        this.neighbors_attitude = 0
-        this.attitude_adjustment = 0
+        this.attitude_difference = 1                     
     }
 
     updateAttitude() {
@@ -18,10 +15,16 @@ class Agent {
         for (let neighbor of this.neighbors) {
             attitude_sum += neighbor.attitude
         }
-        this.neighbors_attitude = (attitude_sum / this.neighbors.length)
-        let attitude_difference = this.neighbors_attitude - this.attitude
-        this.attitude_adjustment = attitude_difference * 0.01
-        this.attitude += this.attitude_adjustment
+        let neighbors_attitude = (attitude_sum / this.neighbors.length)
+        let attitude_difference = neighbors_attitude - this.attitude
+        let attitude_adjustment = 0
+        attitude_adjustment = attitude_difference * 0.01
+        this.attitude += attitude_adjustment
+        // if (this.homogeneity == 1) {
+        //     this.attitude += 0.005
+        // } else if (this.homogeneity == 0) {
+        //     this.attitude -= 0.005
+        // }
         if (this.attitude > 1) this.attitude = 1
         if (this.attitude < 0) this.attitude = 0
     }    
@@ -44,19 +47,37 @@ class Agent {
         //     this.happy = false
         // }
 
-        // happiness based on groups
+        // // happiness based on groups
+        // if (this.neighbors.length < 4) {        // dont like to have fewer than half neighbors
+        //     this.happy = false
+        //     return
+        // }
+        // let own = 0
+        // for (let neighbor of this.neighbors) {
+        //     if (neighbor.group == this.group) {
+        //         own += 1
+        //     }
+        // }
+        // this.homogeneity = own / this.neighbors.length
+        // this.happy = this.homogeneity < this.attitude ? false : true
+
+        // both
         if (this.neighbors.length < 4) {        // dont like to have fewer than half neighbors
             this.happy = false
             return
         }
-        let own = 0
+        let in_group_sum = 0
+        let attitude_sum = 0
         for (let neighbor of this.neighbors) {
             if (neighbor.group == this.group) {
-                own += 1
+                in_group_sum += 1
             }
+            attitude_sum += neighbor.attitude
         }
-        this.homogeneity = own / this.neighbors.length
-        this.happy = this.homogeneity < this.attitude ? false : true
+        this.homogeneity = in_group_sum / this.neighbors.length
+        this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)
+
+        this.happy = (this.homogeneity >= this.attitude) && (Math.abs(this.attitude_difference) < 0.01) ? true : false
 
     }   
 

@@ -17,25 +17,44 @@
             font-family: monospace;
         }
 
+        div {
+            position: absolute;
+        }
+
         #simulation {
-            margin-left: 100px;
-            margin-right: 50px;
-            float: left;
+            top: 100px;
+            left: 100px;
         }
 
         #graphs {
-            margin: 100px;
-            margin-bottom: 20px;
+            top: 100px;
+            left: 800px;
         }
 
         #controls {
-            margin: 100px;
-            margin-top: 0px;
+            top: 250px;
+            left: 800px;
+        }
+
+        #file_select {
+            position: absolute;
+            top: 253px;
+            left: 940px;
+        }
+
+        #info {
+            left: 775px;
+            top: 400px;
         }
 
         a {
             color: black;
             text-decoration: underline;
+        }
+
+        ul {
+            width: 400px;
+            line-height: 20px;
         }
 
     </style>
@@ -55,6 +74,18 @@
         <br />
         <button id="run">RUN</button> <button id="reset">RESET</button>
         <file id="file_upload" />
+    </div>
+    <div id="info">
+        <ul>
+            <li>This is a board composed of agents</li>
+            <li>There are two immutable groups, circle and square</li>
+            <li>Each agent also has an "attitude" which is a continuous value</li>
+            <br />
+            <li>Agents want to be surrounded by other agents with similar values <i>on average</i></li>
+            <li>If there is too large a discrepancy, the agent will be unhappy (marked with a red dot)</li>
+            <li>If an agent is unhappy, it will try to move somewhere where it is happier</li>
+            <li>Agents are also <i>affected</i> by the attitudes of the agents around them, which is turn may affect their happiness and desire to move</li>
+        </ul>
     </div>
 </body>
 </html>

@@ -36,7 +36,7 @@ let simulation = function(s) {
         density_field.changed(s.setGrid)    
 
         population_file = s.createFileInput(s.loadPopulation)
-        // population_file.position(250, 750)
+        population_file.id('file_select')
 
         c1 = s.color(c1)
         c2 = s.color(c2)    

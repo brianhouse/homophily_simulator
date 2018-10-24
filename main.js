@@ -64,8 +64,8 @@ let simulation = function(s) {
             let agent = null
             if (loaded_population == null) {
                 let group = Math.round(Math.random(0, 1))
-                let attitude = group
-                // let attitude = Math.random(0, 1)
+                // let attitude = group
+                let attitude = Math.random(0, 1)
                 agent = new Agent(group, attitude)
             } else {
                 agent = new Agent(loaded_population[i].group, loaded_population[i].attitude)
@@ -83,7 +83,8 @@ let simulation = function(s) {
 
     s.draw = function() { 
         if (running) {  // if not running, this is just a one-time grid draw
-            for (let i=0; i<10; i++) {
+            // for (let i=0; i<10; i++) {
+            for (let i=0; i<Math.max(1, (Math.floor((grid_size * grid_size * grid_size) / 1600))); i++) {                
                 if (!s.update()) {
                     s.noLoop()
                     running = false
@@ -115,6 +116,7 @@ let simulation = function(s) {
         }    
 
         // if no one changed position, then game is over
+        return true
         return i == agents.length ? false : true
 
     }

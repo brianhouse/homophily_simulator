@@ -80,11 +80,12 @@
             <li>This is a board composed of agents</li>
             <li>There are two immutable groups, circle and square</li>
             <li>Each agent also has an "attitude" which is a continuous value</li>
+            <li>An agent's attitude is affected by the attitudes of the agents around them</li>            
             <br />
             <li>Agents prefer to be surrounded by other agents of their same group to an extent determined by their attitude</li>
-            <li>If it's too mixed, the agent will be unhappy (marked with a red dot)</li>
+            <li>They also prefer to be around other agents with a similar attitude
+            <li>If either of these conditions are false, the agent will be unhappy (marked with a red dot)</li>
             <li>If an agent is unhappy, it will try to move somewhere where it is happier</li>
-            <li>Agents are also <i>affected</i> by the attitudes of the agents around them, which is turn may affect their happiness and desire to move</li>
             <br />
             <li>The simulation stops when all agents are happy</li>
         </ul>

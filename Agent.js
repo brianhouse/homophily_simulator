@@ -25,14 +25,20 @@ class Agent {
             this.move(open_cells[c++])
             this.updateHappiness()
 
+            // keep track of the best location vis-a-vis attitude
             if (this.attitude_difference < least_attitude_difference) {
                 least_attitude_difference = this.attitude_difference
                 best_unhappy_cell = this.cell
             }
+
+            // keep track of the best location vis-a-vis group difference
             // if (this.group_difference < least_group_difference) {
             //     least_group_difference = this.group_difference
             //     best_unhappy_cell = this.cell
             // }
+
+            // both of these have a similar effect, with attitude being a slightly clearer result
+            // given that happiness is now a result of both, and attitude is the more continuous value, having it as the default will always have an appropriate effect, whereas group difference could maximize in the wrong direction if it's attitude that was off
 
         }        
         if (!this.happy) {
@@ -57,8 +63,8 @@ class Agent {
             for (let neighbor of this.neighbors) {
                 attitude_sum += neighbor.attitude
             }
-            this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)        
-            // this.attitude_difference = (attitude_sum / this.neighbors.length) - this.attitude
+            // this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)           // bug!
+            this.attitude_difference = (attitude_sum / this.neighbors.length) - this.attitude
         }
 
         // calculate group difference
@@ -74,14 +80,13 @@ class Agent {
             this.group_difference = own / this.neighbors.length
         }
 
-        // happiness is only attitude difference
-        this.happy = Math.abs(this.attitude_difference) < .01 ? true : false
 
-        // happiness is only group difference
-        // this.happy = this.group_difference < this.attitude ? false : true        
+        let happy_attitude = Math.abs(this.attitude_difference) < .01 ? true : false
+        let happy_group = this.group_difference > this.attitude ? true : false
 
-        // happiness is both
-        // this.happy = (this.group_difference >= this.attitude) && (Math.abs(this.attitude_difference) < 0.01) ? true : false
+        this.happy = happy_attitude
+        this.happy = happy_group        
+        this.happy = happy_attitude && happy_group
 
     }   
 

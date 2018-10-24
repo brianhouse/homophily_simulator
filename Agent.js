@@ -5,7 +5,7 @@ class Agent {
         this.group = group
         this.cell = null
         this.happy = true   
-        this.group_difference = 0
+        this.group_difference = 1
         this.attitude_difference = 1                     
     }
 
@@ -55,17 +55,49 @@ class Agent {
         //     return
         // }        
 
-        // calculate attitude difference
+        // // calculate total attitude difference
+        // let attitude_sum = 0
+        // if (this.neighbors.length == 0) {
+        //     this.attitude_difference = 1
+        // } else {
+        //     for (let neighbor of this.neighbors) {
+        //         attitude_sum += neighbor.attitude
+        //     }
+        //     // this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)           // bug!
+        //     this.attitude_difference = (attitude_sum / this.neighbors.length) - this.attitude
+        // }
+
+        // calculate in-group attitude difference
         let attitude_sum = 0
-        if (this.neighbors.length == 0) {
+        let in_group_members = 0
+        for (let neighbor of this.neighbors) {
+            if (neighbor.group == this.group) {
+                attitude_sum += neighbor.attitude
+                in_group_members += 1
+            }
+        }
+        if (in_group_members == 0) {
             this.attitude_difference = 1
         } else {
-            for (let neighbor of this.neighbors) {
-                attitude_sum += neighbor.attitude
-            }
-            // this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)           // bug!
-            this.attitude_difference = (attitude_sum / this.neighbors.length) - this.attitude
+            this.attitude_difference = (attitude_sum / in_group_members) - this.attitude
         }
+
+        // calculate intolerance of out-group
+        attitude_sum = 0
+        let out_group_members = 0
+        for (let neighbor of this.neighbors) {
+            if (neighbor.group != this.group) {
+                attitude_sum += neighbor.attitude
+                out_group_members += 1
+            }
+        }
+        let intolerance
+        if (out_group_members == 0) {
+            intolerance = 0
+        } else {
+            intolerance = (attitude_sum / out_group_members)
+        }
+        // this.attitude_difference += intolerance * 0.03
 
         // calculate group difference
         let own = 0
@@ -80,13 +112,15 @@ class Agent {
             this.group_difference = own / this.neighbors.length
         }
 
-
-        let happy_attitude = Math.abs(this.attitude_difference) < .01 ? true : false
         let happy_group = this.group_difference > this.attitude ? true : false
+        let happy_attitude = Math.abs(this.attitude_difference) < .01 ? true : false
+        let happy_intolerance = intolerance < 0.5 ? true : false    // should be relative to the actual group mix?
+
 
         this.happy = happy_attitude
         this.happy = happy_group        
         this.happy = happy_attitude && happy_group
+        this.happy = happy_attitude && happy_group && happy_intolerance
 
     }   
 

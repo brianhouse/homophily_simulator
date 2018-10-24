@@ -134,7 +134,7 @@ let simulation = function(s) {
         s.redraw()
     }
 
-    s.setGrid = function() {
+    s.setGrid = function(force=false) {
         let density = parseInt(density_field.value())
         let ps = parseInt(population_field.value())
         if (loaded_population != null && ps != population_size) {
@@ -142,7 +142,7 @@ let simulation = function(s) {
             population_field.value(ps)
         }
         let gs = Math.ceil(Math.sqrt((ps / density) * 100))
-        if (gs != grid_size || ps != population_size) {
+        if (force || (gs != grid_size || ps != population_size)) {
             grid_size = gs
             population_size = ps
             s.init()
@@ -157,21 +157,18 @@ let simulation = function(s) {
             loaded_population = []
             for (let key in json) {
 
-                let group = json[key]['group'] == 'A' ? 0 : 1
+                let group = json[key]['group'] == 'b' ? 0 : 1
                 let attitude = null
 
                 if (json[key]['attitude'] == "liberal") {
-                    attitude = 1/3
-                // } else if (json[key]['attitude'] == "illberal") {
-                //     attitude = 1
-                // } else {
-                //     attitude = random(0, 1)
-                // }
+                    attitude = 1/4
+                } else if (json[key]['attitude'] == "illiberal") {
+                    attitude = 3/4
                 } else {
-                    attitude = 2/3
+                    attitude = Math.random(0, 1)
                 }
                 loaded_population.push({group: group, attitude: attitude})
-                
+
             }
             population_size = loaded_population.length
             population_field.value(population_size)     
@@ -179,7 +176,7 @@ let simulation = function(s) {
                 attitude_field.value('--')
             }
             console.log('Parsed population file')
-            s.setGrid()
+            s.setGrid(true)
         }
         reader.readAsText(file.file)
     }

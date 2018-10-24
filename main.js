@@ -156,8 +156,10 @@ let simulation = function(s) {
             let json = JSON.parse(event.target.result);
             loaded_population = []
             for (let key in json) {
+
                 let group = json[key]['group'] == 'A' ? 0 : 1
                 let attitude = null
+
                 if (json[key]['attitude'] == "liberal") {
                     attitude = 1/3
                 // } else if (json[key]['attitude'] == "illberal") {
@@ -169,6 +171,7 @@ let simulation = function(s) {
                     attitude = 2/3
                 }
                 loaded_population.push({group: group, attitude: attitude})
+                
             }
             population_size = loaded_population.length
             population_field.value(population_size)     

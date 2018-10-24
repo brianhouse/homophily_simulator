@@ -83,8 +83,7 @@ let simulation = function(s) {
 
     s.draw = function() { 
         if (running) {  // if not running, this is just a one-time grid draw
-            // for (let i=0; i<10; i++) {
-            for (let i=0; i<Math.max(1, (Math.floor((grid_size * grid_size * grid_size) / 1600))); i++) {                
+            for (let i=0; i<Math.min(population_size / 40, 20); i++) {
                 if (!s.update()) {
                     s.noLoop()
                     running = false
@@ -105,7 +104,7 @@ let simulation = function(s) {
             i += 1 
         }
 
-        // update everyone else's status (could optimize)
+        // update everyone else's status (could optimize to past and present neighbors)
         for (let agent of agents) {
             agent.updateHappiness()
         }    
@@ -116,7 +115,6 @@ let simulation = function(s) {
         }    
 
         // if no one changed position, then game is over
-        return true
         return i == agents.length ? false : true
 
     }

@@ -4,84 +4,10 @@ class Agent {
         this.attitude = attitude
         this.group = group
         this.cell = null
-        this.homogeneity = 0
         this.happy = true   
+        this.group_difference = 0
         this.attitude_difference = 1                     
     }
-
-    updateAttitude() {
-        if (this.happy) return
-        this.attitude += this.attitude_difference * 0.001
-        // if (!this.neighbors.length) return
-        // let attitude_sum = 0
-        // for (let neighbor of this.neighbors) {
-        //     attitude_sum += neighbor.attitude
-        // }
-        // let neighbors_attitude = (attitude_sum / this.neighbors.length)
-        // let attitude_difference = neighbors_attitude - this.attitude
-        // let attitude_adjustment = 0
-        // attitude_adjustment = attitude_difference * 0.01
-        // this.attitude += attitude_adjustment
-        // // if (this.homogeneity == 1) {
-        // //     this.attitude += 0.005
-        // // } else if (this.homogeneity == 0) {
-        // //     this.attitude -= 0.005
-        // // }
-        if (this.attitude > 1) this.attitude = 1
-        if (this.attitude < 0) this.attitude = 0
-    }    
-
-    updateHappiness() {
-
-        // if (this.neighbors.length < 4) {        // dont like to have fewer than half neighbors
-        //     this.happy = false
-        //     return
-        // }        
-
-        // happiness based on attitude
-        let attitude_sum = 0
-        if (this.neighbors.length == 0) {
-            this.attitude_difference = 1
-        } else {
-            for (let neighbor of this.neighbors) {
-                attitude_sum += neighbor.attitude
-            }
-            this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)        
-        }
-        // for (let neighbor of this.neighbors) {
-        //     attitude_sum += neighbor.attitude
-        // }
-        // this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)
-        if (Math.abs(this.attitude_difference) < .01) {
-            this.happy = true
-        } else {
-            this.happy = false
-        }
-
-        // // happiness based on groups
-        // let own = 0
-        // for (let neighbor of this.neighbors) {
-        //     if (neighbor.group == this.group) {
-        //         own += 1
-        //     }
-        // }
-        // this.homogeneity = own / this.neighbors.length
-        // this.happy = this.homogeneity < this.attitude ? false : true
-
-        // // both
-        // let in_group_sum = 0
-        // let attitude_sum = 0
-        // for (let neighbor of this.neighbors) {
-        //     if (neighbor.group == this.group) {
-        //         in_group_sum += 1
-        //     }
-        //     attitude_sum += neighbor.attitude
-        // }
-        // this.homogeneity = in_group_sum / this.neighbors.length
-        // this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)
-
-        // this.happy = (this.homogeneity >= this.attitude) && (Math.abs(this.attitude_difference) < 0.01) ? true : false
-    }   
 
     updatePosition() {
         // returns bool: moved?
@@ -92,26 +18,80 @@ class Agent {
         let original_cell = this.cell
         let open_cells = grid.openCells()
         let least_attitude_difference = this.attitude_difference
-        // let most_homogeneity = this.homogeneity
+        let least_group_difference = this.group_difference
         let best_unhappy_cell = this.cell
         let c = 0
         while (!this.happy && c < open_cells.length) {
             this.move(open_cells[c++])
             this.updateHappiness()
+
             if (this.attitude_difference < least_attitude_difference) {
                 least_attitude_difference = this.attitude_difference
                 best_unhappy_cell = this.cell
             }
-            // if (most_homogeneity > this.homogeneity) {
-            //     most_homogeneity = this.homogeneity
+            // if (this.group_difference < least_group_difference) {
+            //     least_group_difference = this.group_difference
             //     best_unhappy_cell = this.cell
             // }
+
         }        
         if (!this.happy) {
             this.move(best_unhappy_cell)
+            this.updateHappiness()  // just to be sure attitude_difference is up to date
         }
         return true
-    }
+    }    
+
+    updateHappiness() {
+
+        // if (this.neighbors.length < 4) {        // dont like to have fewer than half neighbors
+        //     this.happy = false
+        //     return
+        // }        
+
+        // calculate attitude difference
+        let attitude_sum = 0
+        if (this.neighbors.length == 0) {
+            this.attitude_difference = 1
+        } else {
+            for (let neighbor of this.neighbors) {
+                attitude_sum += neighbor.attitude
+            }
+            this.attitude_difference = this.attitude - (attitude_sum / this.neighbors.length)        
+            // this.attitude_difference = (attitude_sum / this.neighbors.length) - this.attitude
+        }
+
+        // calculate group difference
+        let own = 0
+        if (this.neighbors.length == 0) {
+            this.group_difference = 1
+        } else {
+            for (let neighbor of this.neighbors) {
+                if (neighbor.group == this.group) {
+                    own += 1
+                }
+            }
+            this.group_difference = own / this.neighbors.length
+        }
+
+        // happiness is only attitude difference
+        this.happy = Math.abs(this.attitude_difference) < .01 ? true : false
+
+        // happiness is only group difference
+        // this.happy = this.group_difference < this.attitude ? false : true        
+
+        // happiness is both
+        // this.happy = (this.group_difference >= this.attitude) && (Math.abs(this.attitude_difference) < 0.01) ? true : false
+
+    }   
+
+    updateAttitude() {
+        if (!this.neighbors.length) return
+        this.attitude += this.attitude_difference * 0.001
+        if (this.attitude > 1) this.attitude = 1
+        if (this.attitude < 0) this.attitude = 0
+    }    
+
 
     move(cell) {
         if (this.cell != null) {
